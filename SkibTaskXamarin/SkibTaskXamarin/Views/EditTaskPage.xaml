@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SkibTaskXamarin.Views.EditTaskPage">
+
+    <StackLayout Padding="10">
+        <Entry Placeholder="Заголовок" Text="{Binding Task.Title}" />
+        <Editor Placeholder="Описание" Text="{Binding Task.Description}" />
+        <DatePicker Date="{Binding Task.DueDate}" />
+        <Button Text="Сохранить" Command="{Binding SaveTaskCommand}" />
+    </StackLayout>
+</ContentPage>

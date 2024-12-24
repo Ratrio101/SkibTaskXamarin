@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SkibTaskXamarin.ViewModels"
+             x:Class="SkibTaskXamarin.Views.AddTaskPage">
+    <ContentPage.BindingContext>
+        <vm:AddTaskViewModel />
+    </ContentPage.BindingContext>
+
+    <StackLayout Padding="10">
+        <Entry Placeholder="Заголовок" Text="{Binding Title}" />
+        <Editor Placeholder="Описание" Text="{Binding Description}" />
+        <DatePicker Date="{Binding DueDate}" />
+        <Button Text="Добавить" Command="{Binding SaveTaskCommand}" />
+    </StackLayout>
+</ContentPage>

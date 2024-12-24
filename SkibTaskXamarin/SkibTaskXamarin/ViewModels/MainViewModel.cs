@@ -6,6 +6,8 @@ using SkibTaskXamarin.Models;
 using SkibTaskXamarin.Services;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using SkibTaskXamarin.Views;
+using System.Linq;
 
 namespace SkibTaskXamarin.ViewModels
 {
@@ -32,37 +34,62 @@ namespace SkibTaskXamarin.ViewModels
 
         public MainViewModel()
         {
-            LoadTasks();
+            // _taskService = new TaskService();
+
             AddTaskCommand = new Command(OnAddTask);
             EditTaskCommand = new Command(OnEditTask);
             DeleteTaskCommand = new Command(OnDeleteTask);
+
+            MessagingCenter.Subscribe<EditTaskViewModel, TaskItem>(this, "TaskUpdated", (sender, updatedTask) =>
+            {
+                // Удаляем старую задачу
+                var existingTask = Tasks.FirstOrDefault(t => t.Id == updatedTask.Id);
+                if (existingTask != null)
+                {
+                    Tasks.Remove(existingTask);
+                }
+
+                // Добавляем обновлённую задачу
+                Tasks.Add(updatedTask);
+
+                // Уведомляем интерфейс
+                OnPropertyChanged(nameof(Tasks));
+            });
+
+            LoadTasks();
+            // MessagingCenter.Subscribe<AddTaskViewModel>(this, "TaskAdded", (sender) => LoadTasks());
         }
 
         private void LoadTasks()
         {
-            var tasks = _taskService.GetTasks();
             Tasks.Clear();
+            var tasks = _taskService.GetTasks();
             foreach (var task in tasks)
             {
                 Tasks.Add(task);
             }
         }
 
-        private void OnAddTask()
+        private async void OnAddTask()
         {
-            var newTask = new TaskItem { Title = "Новая задача", DueDate = DateTime.Now.AddDays(1) };
-            _taskService.AddTask(newTask);
-            LoadTasks();
+            await Application.Current.MainPage.Navigation.PushAsync(new Views.AddTaskPage());
+            MessagingCenter.Subscribe<AddTaskViewModel>(this, "TaskAdded", sender =>
+            {
+                var newTasks = _taskService.GetTasks();
+                Tasks.Clear();
+                foreach (var task in newTasks)
+                {
+                    Tasks.Add(task);
+                }
+            });
         }
 
-        private void OnEditTask()
+        private async void OnEditTask()
         {
             if (SelectedTask != null)
             {
-                // Simulate editing task
-                SelectedTask.Title = "Отредактированная задача";
-                _taskService.UpdateTask(SelectedTask);
-                LoadTasks();
+                await Application.Current.MainPage.Navigation.PushAsync(new EditTaskPage(new EditTaskViewModel(SelectedTask)));
+                LoadTasks(); // Перезагрузка задач после редактирования
             }
         }
 
@@ -71,7 +98,8 @@ namespace SkibTaskXamarin.ViewModels
             if (SelectedTask != null)
             {
                 _taskService.DeleteTask(SelectedTask.Id);
-                LoadTasks();
+                Tasks.Remove(SelectedTask); // Удалить из коллекции
+                LoadTasks(); // Перезагрузка задач после удаления
             }
         }
     }
