@@ -12,12 +12,34 @@ namespace SkibTaskXamarin.Services
     {
         private const string UserFileName = "users.json";
         private readonly string _filePath;
-        private List<User> _users;
+        private readonly List<User> _users = new List<User>();
 
+        public List<User> GetAllUsers() => _users;
+
+        public void UpdateUser(User updatedUser)
+        {
+            var user = _users.FirstOrDefault(u => u.Id == updatedUser.Id);
+            if (user != null)
+            {
+                user.Username = updatedUser.Username;
+                user.Password = updatedUser.Password;
+            }
+        }
+
+        public void DeleteUser(string userId)
+        {
+            var user = _users.FirstOrDefault(u => u.Id == userId);
+            if (user != null)
+            {
+                _users.Remove(user);
+            }
+        }
         public AuthService()
         {
+            _users.Add(new User { Username = "admin", Password = "admin" });
             _filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), UserFileName);
             _users = LoadUsers();
+
         }
 
         public bool Register(string username, string password)

@@ -47,13 +47,20 @@ namespace SkibTaskXamarin.ViewModels
         {
             if (_authService.Login(Username, Password))
             {
-                await Application.Current.MainPage.DisplayAlert("Успех", "Вход выполнен успешно!", "OK");
-                // Navigate to the main page
-                Application.Current.MainPage = new NavigationPage(new MainPage());
+                if (Username == "admin") // Проверка, что это администратор
+                {
+                    await Application.Current.MainPage.DisplayAlert("Успех", "Добро пожаловать в админку! Гы! o_0", "OK");
+                    Application.Current.MainPage = new NavigationPage(new AdminPage());
+                }
+                else
+                {
+                    await Application.Current.MainPage.DisplayAlert("Успех", "Вход выполнен успешно!", "OK");
+                    Application.Current.MainPage = new NavigationPage(new MainPage());
+                }
             }
             else
             {
-                await Application.Current.MainPage.DisplayAlert("Ой-ой!", "Неверный логин или пароль! Попробуйте еще раз.", "OK");
+                await Application.Current.MainPage.DisplayAlert("Ошибка", "Неверный логин или пароль!", "OK");
             }
         }
 

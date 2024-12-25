@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SkibTaskXamarin.ViewModels"
+             x:Class="SkibTaskXamarin.Views.AdminPage">
+    <ContentPage.BindingContext>
+        <vm:AdminViewModel />
+    </ContentPage.BindingContext>
+
+    <StackLayout Padding="10">
+        <Label Text="Список пользователей" FontSize="24" HorizontalOptions="Center" />
+        <ListView ItemsSource="{Binding Users}"
+                  SelectedItem="{Binding SelectedUser}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextCell Text="{Binding Username}" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <Button Text="Редактировать пользователя" Command="{Binding EditUserCommand}" />
+        <Button Text="Удалить пользователя" Command="{Binding DeleteUserCommand}" />
+    </StackLayout>
+</ContentPage>

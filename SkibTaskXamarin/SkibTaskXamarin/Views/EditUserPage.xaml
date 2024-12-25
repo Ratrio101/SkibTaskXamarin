@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SkibTaskXamarin.ViewModels"
+             x:Class="SkibTaskXamarin.Views.EditUserPage">
+    <StackLayout Padding="10">
+        <Entry Placeholder="Имя пользователя" Text="{Binding User.Username}" />
+        <Entry Placeholder="Пароль" Text="{Binding User.Password}" IsPassword="True" />
+        <Button Text="Сохранить изменения" Command="{Binding SaveUserCommand}" />
+    </StackLayout>
+</ContentPage>
